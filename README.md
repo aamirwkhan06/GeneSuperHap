@@ -7,14 +7,14 @@
 GeneSuperHap is an independent R-based pipeline for haplotype analysis specifically designed for plant breeding programs. Unlike existing tools that focus primarily on descriptive analysis, GeneSuperHap integrates **machine learning** and **multi-trait optimization** to provide actionable breeding recommendations.
 
 ### Key Differentiator
-**SuperHap not only identifies haplotypes - it predicts which ones will perform best and tells you which to use in your breeding program.**
+**GeneSuperHap not only identifies haplotypes - it predicts which ones will perform best and tells you which to use in your breeding program.**
 
 ---
 
-## Why SuperHap?
+## Why GeneSuperHap?
 
-- ✅ SuperHap: Predictive ML-based ranking + breeding decisions
-- ✅ SuperHap: Multi-trait selection indices
+- ✅ GeneSuperHap: Predictive ML-based ranking + breeding decisions
+- ✅ GeneSuperHap: Multi-trait selection indices
 
 ---
 
@@ -251,7 +251,7 @@ Sample2    3200   Location1
 
 ```r
 # ==============================================================================
-# Complete SuperHap Analysis
+# Complete GeneSuperHap Analysis
 # ==============================================================================
 
 # Load functions
@@ -321,10 +321,10 @@ write.table(selection$summary, "selection_index.txt",
 
 ## Citation
 
-If you use SuperHap, please cite:
+If you use GeneSuperHap, please cite:
 
 ```
-GitHub: [https://github.com/aamirwkhan06/GeneSuperHap]
+GitHub: https://github.com/aamirwkhan06/GeneSuperHap
 ```
 
 ---
