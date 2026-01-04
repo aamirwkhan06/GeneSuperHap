@@ -5,12 +5,12 @@
 ---
 
 ## Table of Contents
-1. [Setup and Installation]
-2. [Data Preparation]
-3. [Running the Pipeline]
-4. [Understanding the Results]
-5. [Customization]
-6. [Troubleshooting]
+1. [Setup and Installation](#setup)
+2. [Data Preparation](#data-prep)
+3. [Running the Pipeline](#pipeline)
+4. [Understanding the Results](#results)
+5. [Customization](#customization)
+6. [Troubleshooting](#troubleshooting)
 
 ---
 
