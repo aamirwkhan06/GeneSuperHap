@@ -13,12 +13,7 @@ SuperHap is an independent R-based pipeline for haplotype analysis specifically 
 
 ## Why SuperHap?
 
-### vs. geneHapR
-- ❌ geneHapR: Descriptive haplotype calling only
 - ✅ SuperHap: Predictive ML-based ranking + breeding decisions
-
-### vs. Other Tools
-- ❌ Other tools: Single-trait focus
 - ✅ SuperHap: Multi-trait selection indices
 
 ---
@@ -52,8 +47,6 @@ print(ml_model$haplotype_rankings)
 - Reduce expensive field trials
 - Identify hidden patterns
 
-**Unique to SuperHap:** No other haplotype tool includes ML-based ranking
-
 ---
 
 ### 2. **Multi-Trait Selection Index** 📊
@@ -81,8 +74,6 @@ selection_idx <- calculate_selection_index(
 - Single-trait selection often fails
 - Accounts for trait importance
 
-**Unique to SuperHap:** geneHapR only handles single traits
-
 ---
 
 ### 3. **Haplotype Stability Analysis** 🌍
@@ -108,8 +99,6 @@ stability <- calculate_haplotype_stability(
 - Wide adaptation is valuable
 - Reduces deployment risk
 
-**Unique to SuperHap:** Breeding-specific stability metrics
-
 ---
 
 ### 4. **Network-Based Haplotype Relationships** 🕸️
@@ -133,7 +122,7 @@ distances <- calculate_haplotype_distances(
 **Why it matters:**
 - Understand haplotype relationships
 - Guide diversity management
-- Beautiful visualizations
+- Aesthetic visualizations
 
 ---
 
@@ -311,21 +300,6 @@ write.table(selection$summary, "selection_index.txt",
 
 ---
 
-## What Makes SuperHap Different?
-
-| Feature | SuperHap | geneHapR | TASSEL | Other Tools |
-|---------|----------|----------|--------|-------------|
-| Haplotype Calling | ✅ | ✅ | ✅ | ✅ |
-| **ML-Based Ranking** | ✅ | ❌ | ❌ | ❌ |
-| **Multi-Trait Index** | ✅ | ❌ | ❌ | ❌ |
-| **Stability Analysis** | ✅ | ❌ | Partial | ❌ |
-| **Network Visualization** | ✅ | ❌ | ❌ | ❌ |
-| **Custom Styling** | ✅ | Partial | ❌ | Partial |
-| Breeding Focus | ✅ | ❌ | ❌ | ❌ |
-| Independent Code | ✅ | N/A | N/A | Varies |
-
----
-
 ## Scientific Applications
 
 ### 1. Breeding Programs
@@ -350,8 +324,7 @@ write.table(selection$summary, "selection_index.txt",
 If you use SuperHap, please cite:
 
 ```
-Khan, A. (2026). SuperHap: A machine learning-enhanced haplotype analysis
-pipeline for plant breeding. GitHub: https://github.com/tutuse/Superior-haplotypes-in-plants
+GitHub: https://github.com/tutuse/Superior-haplotypes-in-plants
 ```
 
 ---
@@ -360,7 +333,6 @@ pipeline for plant breeding. GitHub: https://github.com/tutuse/Superior-haplotyp
 
 **Aamir Khan, PhD**  
 Research Scientist, Bioinformatics  
-University of Missouri-Columbia  
 GitHub: [@tutuse](https://github.com/tutuse)
 
 ---
