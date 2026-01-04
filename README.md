@@ -7,7 +7,7 @@
 SuperHap is an independent R-based pipeline for haplotype analysis specifically designed for plant breeding programs. Unlike existing tools that focus primarily on descriptive analysis, SuperHap integrates **machine learning** and **multi-trait optimization** to provide actionable breeding recommendations.
 
 ### Key Differentiator
-**SuperHap doesn't just describe haplotypes - it predicts which ones will perform best and tells you which to use in your breeding program.**
+**SuperHap not only identifies haplotypes - it predicts which ones will perform best and tells you which to use in your breeding program.**
 
 ---
 
@@ -18,7 +18,7 @@ SuperHap is an independent R-based pipeline for haplotype analysis specifically 
 
 ---
 
-## 🚀 5 Unique Features
+## Features
 
 ### 1. **Machine Learning Haplotype Ranking** 🤖
 
@@ -174,8 +174,8 @@ install.packages(c("igraph", "pheatmap", "ggrepel"))
 ### Download
 
 ```bash
-git clone https://github.com/tutuse/Superior-haplotypes-in-plants.git
-cd Superior-haplotypes-in-plants
+git clone https://github.com/aamirwkhan06/GeneSuperHap.git
+cd GeneSuperHap
 ```
 
 ---
@@ -183,7 +183,7 @@ cd Superior-haplotypes-in-plants
 ## Quick Start
 
 ```r
-# Load SuperHap
+# Load GeneSuperHap
 source("core_functions.R")
 source("unique_features.R")
 
@@ -300,7 +300,7 @@ write.table(selection$summary, "selection_index.txt",
 
 ---
 
-## Scientific Applications
+## Applications
 
 ### 1. Breeding Programs
 - Rank haplotypes for crossing
@@ -324,16 +324,15 @@ write.table(selection$summary, "selection_index.txt",
 If you use SuperHap, please cite:
 
 ```
-GitHub: https://github.com/tutuse/Superior-haplotypes-in-plants
+GitHub: [https://github.com/aamirwkhan06/GeneSuperHap]
 ```
 
 ---
 
 ## Contact
 
-**Aamir Khan, PhD**  
+**Aamir W. Khan, PhD**  
 Research Scientist, Bioinformatics  
-GitHub: [@tutuse](https://github.com/tutuse)
 
 ---
 
