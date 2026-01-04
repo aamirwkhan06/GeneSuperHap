@@ -1,4 +1,4 @@
-# SuperHap: Complete Tutorial
+# GeneSuperHap: Complete Tutorial
 
 ## Step-by-Step Guide to Haplotype Analysis with Machine Learning
 
