@@ -1,0 +1,28 @@
+# R files
+.Rhistory
+.RData
+.Rproj.user
+*.Rproj
+
+# Results and outputs
+results/
+output/
+*.pdf
+*.png
+*.jpg
+
+# Large data files
+input_data/*.vcf.gz
+*.gff
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary
+*~
+*.swp
+.Rdata
