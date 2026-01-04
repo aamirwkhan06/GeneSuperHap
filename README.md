@@ -1,4 +1,4 @@
-# SuperHap: Superior Haplotype Analysis for Plant Breeding
+# GeneSuperHap: Superior Haplotype Analysis for Plant Breeding
 
 **A breeding-focused haplotype analysis toolkit with machine learning capabilities**
 
