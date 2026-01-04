@@ -5,16 +5,16 @@
 ---
 
 ## Table of Contents
-1. [Setup and Installation](#setup)
-2. [Data Preparation](#data-prep)
-3. [Running the Pipeline](#pipeline)
-4. [Understanding the Results](#results)
-5. [Customization](#customization)
-6. [Troubleshooting](#troubleshooting)
+1. [Setup and Installation]
+2. [Data Preparation]
+3. [Running the Pipeline]
+4. [Understanding the Results]
+5. [Customization]
+6. [Troubleshooting]
 
 ---
 
-## 1. Setup and Installation {#setup}
+## 1. Setup and Installation
 
 ### 1.1 Install R Packages
 
@@ -56,7 +56,7 @@ source("visualization.R")
 
 ---
 
-## 2. Data Preparation {#data-prep}
+## 2. Data Preparation
 
 ### 2.1 Prepare Your VCF File
 
@@ -119,7 +119,7 @@ superhap/
 
 ---
 
-## 3. Running the Pipeline {#pipeline}
+## 3. Running the Pipeline
 
 ### 3.1 Quick Start (Run Everything)
 
@@ -264,7 +264,7 @@ source("05_network_analysis.R")
 
 ---
 
-## 4. Understanding the Results {#results}
+## 4. Understanding the Results
 
 ### 4.1 Which Haplotype is Best?
 
@@ -314,7 +314,7 @@ Best haplotype for breeding:
 
 ---
 
-## 5. Customization {#customization}
+## 5. Customization
 
 ### 5.1 Custom Haplotype Names
 
@@ -367,7 +367,7 @@ rf_model <- randomForest(model_formula, data = train_data,
 
 ---
 
-## 6. Troubleshooting {#troubleshooting}
+## 6. Troubleshooting
 
 ### Problem 1: "File not found"
 
@@ -542,7 +542,7 @@ GitHub: https://github.com/tutuse/Superior-haplotypes-in-plants
 ## 10. Getting Help
 
 - **GitHub Issues:** Report bugs or request features
-- **Email:** [your email]
+- **Email:** maky74@missouri.edu
 - **Documentation:** Check README.md
 
 ---
