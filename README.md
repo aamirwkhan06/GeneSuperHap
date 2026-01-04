@@ -4,7 +4,7 @@
 
 ## Overview
 
-SuperHap is an independent R-based pipeline for haplotype analysis specifically designed for plant breeding programs. Unlike existing tools that focus primarily on descriptive analysis, SuperHap integrates **machine learning** and **multi-trait optimization** to provide actionable breeding recommendations.
+GeneSuperHap is an independent R-based pipeline for haplotype analysis specifically designed for plant breeding programs. Unlike existing tools that focus primarily on descriptive analysis, GeneSuperHap integrates **machine learning** and **multi-trait optimization** to provide actionable breeding recommendations.
 
 ### Key Differentiator
 **SuperHap not only identifies haplotypes - it predicts which ones will perform best and tells you which to use in your breeding program.**
