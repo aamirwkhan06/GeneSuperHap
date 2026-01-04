@@ -34,8 +34,8 @@ install.packages(c("pheatmap", "igraph", "ggrepel", "gridExtra"))
 ### 1.2 Download SuperHap
 
 ```bash
-git clone https://github.com/tutuse/Superior-haplotypes-in-plants.git
-cd Superior-haplotypes-in-plants
+git clone https://github.com/aamirwkhan06/GeneSuperHap.git
+cd GeneSuperHap
 ```
 
 ### 1.3 Verify Installation
@@ -447,7 +447,7 @@ MAX_MISSING <- 0.2             # Allow 20% missing
 
 ```r
 # ==============================================================================
-# COMPLETE SUPERHAP ANALYSIS EXAMPLE
+# COMPLETE GENESUPERHAP ANALYSIS EXAMPLE
 # ==============================================================================
 
 # 1. Setup
@@ -529,12 +529,11 @@ cv_results <- cross_validate_haplotype_model(
 
 ## 9. Citation
 
-If you use SuperHap in your research:
+If you use GeneSuperHap in your research:
 
 ```
-Khan, A. (2026). SuperHap: A machine learning-enhanced haplotype 
-analysis pipeline for plant breeding. 
-GitHub: https://github.com/tutuse/Superior-haplotypes-in-plants
+GeneSuperHap: A machine learning-enhanced haplotype analysis pipeline for plant breeding. 
+GitHub: [https://github.com/aamirwkhan06/GeneSuperHap]
 ```
 
 ---
