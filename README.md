@@ -352,4 +352,4 @@ Planned features:
 
 ---
 
-**SuperHap: From Haplotypes to Breeding Decisions**
+**GeneSuperHap: From Haplotypes to Breeding Decisions**
