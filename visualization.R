@@ -1,10 +1,4 @@
 #!/usr/bin/env Rscript
-# ==============================================================================
-# SuperHap: Visualization Module (Scientifically Validated)
-# Author: Aamir Khan
-# Description: Publication-quality plots for all 5 unique features
-# Methods based on: Breiman (2001), Smith & Cullis (2018), and standard practices
-# ==============================================================================
 
 suppressPackageStartupMessages({
   library(ggplot2)
@@ -17,24 +11,14 @@ suppressPackageStartupMessages({
   library(gridExtra)
 })
 
-# ==============================================================================
-# FEATURE 1 PLOTS: Machine Learning Results
-# ==============================================================================
-
-#' Plot ML model performance and feature importance
-#' Based on: Breiman (2001) Random Forests, Variable Importance
-#' @param ml_result Result from train_haplotype_ranker()
-#' @param output_prefix Prefix for output files
 plot_ml_results <- function(ml_result, output_prefix = "ml_analysis") {
   
   cat("\n========================================\n")
   cat("PLOTTING ML RESULTS\n")
   cat("========================================\n\n")
   
-  # 1. Predicted vs Observed plot
   pred_data <- ml_result$predictions
   
-  # Calculate regression line
   lm_fit <- lm(Predicted ~ Actual, data = pred_data)
   r_squared <- ml_result$performance$r_squared
   rmse <- ml_result$performance$rmse
@@ -63,7 +47,6 @@ plot_ml_results <- function(ml_result, output_prefix = "ml_analysis") {
   ggsave(paste0(output_prefix, "_predictions.pdf"), p1, width = 10, height = 8)
   ggsave(paste0(output_prefix, "_predictions.png"), p1, width = 10, height = 8, dpi = 300)
   
-  # 2. Haplotype Rankings Bar Plot
   rankings <- ml_result$haplotype_rankings %>%
     arrange(ML_Rank) %>%
     head(15)  # Top 15
@@ -97,22 +80,12 @@ plot_ml_results <- function(ml_result, output_prefix = "ml_analysis") {
   return(list(p1 = p1, p2 = p2))
 }
 
-
-# ==============================================================================
-# FEATURE 2 PLOTS: Multi-Trait Selection Index
-# ==============================================================================
-
-#' Plot multi-trait selection index results
-#' Based on: Smith (1936) hazel (1943) selection index theory
-#' @param selection_result Result from calculate_selection_index()
-#' @param output_prefix Prefix for output files
 plot_selection_index <- function(selection_result, output_prefix = "selection_index") {
   
   cat("\n========================================\n")
   cat("PLOTTING SELECTION INDEX\n")
   cat("========================================\n\n")
   
-  # 1. Selection Index Rankings
   summary_data <- selection_result$summary %>%
     arrange(Rank) %>%
     head(15)
@@ -142,7 +115,6 @@ plot_selection_index <- function(selection_result, output_prefix = "selection_in
   ggsave(paste0(output_prefix, "_rankings.pdf"), p1, width = 12, height = 8)
   ggsave(paste0(output_prefix, "_rankings.png"), p1, width = 12, height = 8, dpi = 300)
   
-  # 2. Distribution of Index Values
   individual_data <- selection_result$individual_values
   
   p2 <- ggplot(individual_data, aes(x = Selection_Index, fill = Haplotype)) +
@@ -168,22 +140,12 @@ plot_selection_index <- function(selection_result, output_prefix = "selection_in
   return(list(p1 = p1, p2 = p2))
 }
 
-
-# ==============================================================================
-# FEATURE 3 PLOTS: Haplotype Stability
-# ==============================================================================
-
-#' Plot haplotype stability analysis
-#' Based on: Finlay & Wilkinson (1963), Eberhart & Russell (1966)
-#' @param stability_result Result from calculate_haplotype_stability()
-#' @param output_prefix Prefix for output files
 plot_stability_analysis <- function(stability_result, output_prefix = "stability") {
   
   cat("\n========================================\n")
   cat("PLOTTING STABILITY ANALYSIS\n")
   cat("========================================\n\n")
   
-  # 1. Mean vs CV plot (classic stability plot)
   p1 <- ggplot(stability_result, aes(x = Mean_trait, y = CV)) +
     geom_point(aes(size = N_samples, color = Stability_Rank), alpha = 0.7) +
     geom_text_repel(aes(label = Haplotype), size = 3.5, max.overlaps = 20) +
@@ -203,7 +165,6 @@ plot_stability_analysis <- function(stability_result, output_prefix = "stability
   ggsave(paste0(output_prefix, "_mean_vs_cv.pdf"), p1, width = 12, height = 8)
   ggsave(paste0(output_prefix, "_mean_vs_cv.png"), p1, width = 12, height = 8, dpi = 300)
   
-  # 2. Stability Rankings Bar Plot
   top_stable <- stability_result %>%
     arrange(Stability_Rank) %>%
     head(15)
@@ -234,16 +195,6 @@ plot_stability_analysis <- function(stability_result, output_prefix = "stability
   return(list(p1 = p1, p2 = p2))
 }
 
-
-# ==============================================================================
-# FEATURE 4 PLOTS: Haplotype Network
-# ==============================================================================
-
-#' Plot haplotype relationship network
-#' Based on: Bandelt et al. (1999) median-joining networks
-#' @param distance_matrix Distance matrix from calculate_haplotype_distances()
-#' @param haplotype_sizes Named vector of haplotype sizes
-#' @param output_prefix Prefix for output files
 plot_haplotype_network <- function(distance_matrix, haplotype_sizes = NULL,
                                   output_prefix = "network") {
   
@@ -251,11 +202,8 @@ plot_haplotype_network <- function(distance_matrix, haplotype_sizes = NULL,
   cat("PLOTTING HAPLOTYPE NETWORK\n")
   cat("========================================\n\n")
   
-  # Create network from distance matrix
-  # Use only edges with distance < threshold to avoid clutter
   threshold <- quantile(distance_matrix[upper.tri(distance_matrix)], 0.5)
   
-  # Create edge list
   edges <- data.frame()
   for(i in 1:(nrow(distance_matrix)-1)) {
     for(j in (i+1):ncol(distance_matrix)) {
@@ -269,23 +217,18 @@ plot_haplotype_network <- function(distance_matrix, haplotype_sizes = NULL,
     }
   }
   
-  # Create igraph object
   g <- graph_from_data_frame(edges, directed = FALSE)
   
-  # Set node sizes
   if(!is.null(haplotype_sizes)) {
     V(g)$size <- haplotype_sizes[V(g)$name]
   } else {
     V(g)$size <- 5
   }
   
-  # Set edge weights
   E(g)$width <- E(g)$weight * 5
   
-  # Layout
   layout <- layout_with_fr(g)
   
-  # Plot
   pdf(paste0(output_prefix, "_graph.pdf"), width = 12, height = 12)
   plot(g, 
        vertex.size = sqrt(V(g)$size) * 3,
@@ -317,7 +260,6 @@ plot_haplotype_network <- function(distance_matrix, haplotype_sizes = NULL,
        sub = "Node size = number of samples, Edge width = genetic similarity")
   dev.off()
   
-  # Also create heatmap
   pdf(paste0(output_prefix, "_heatmap.pdf"), width = 10, height = 10)
   pheatmap(distance_matrix,
            color = colorRampPalette(c("blue", "white", "red"))(100),
@@ -341,15 +283,6 @@ plot_haplotype_network <- function(distance_matrix, haplotype_sizes = NULL,
   cat("  Saved:", paste0(output_prefix, "_heatmap.*"), "\n\n")
 }
 
-
-# ==============================================================================
-# FEATURE 5: Enhanced Haplotype Distribution Plots
-# ==============================================================================
-
-#' Create customized haplotype distribution plots
-#' @param haplotype_table Data frame with Accession and Haplotype
-#' @param colors Named vector of colors for haplotypes
-#' @param output_prefix Prefix for output files
 plot_haplotype_distribution <- function(haplotype_table, colors = NULL,
                                        output_prefix = "distribution") {
   
@@ -357,13 +290,11 @@ plot_haplotype_distribution <- function(haplotype_table, colors = NULL,
   cat("PLOTTING HAPLOTYPE DISTRIBUTION\n")
   cat("========================================\n\n")
   
-  # Calculate frequencies
   freq_data <- haplotype_table %>%
     count(Haplotype) %>%
     mutate(Percentage = n / sum(n) * 100) %>%
     arrange(desc(n))
   
-  # Set colors if not provided
   if(is.null(colors)) {
     n_haps <- nrow(freq_data)
     colors <- setNames(
@@ -372,7 +303,6 @@ plot_haplotype_distribution <- function(haplotype_table, colors = NULL,
     )
   }
   
-  # 1. Bar plot
   p1 <- ggplot(freq_data, aes(x = reorder(Haplotype, -n), y = n, fill = Haplotype)) +
     geom_bar(stat = "identity", color = "black", size = 0.8) +
     scale_fill_manual(values = colors) +
@@ -393,7 +323,6 @@ plot_haplotype_distribution <- function(haplotype_table, colors = NULL,
   ggsave(paste0(output_prefix, "_barplot.pdf"), p1, width = 10, height = 8)
   ggsave(paste0(output_prefix, "_barplot.png"), p1, width = 10, height = 8, dpi = 300)
   
-  # 2. Pie chart
   p2 <- ggplot(freq_data, aes(x = "", y = n, fill = Haplotype)) +
     geom_bar(stat = "identity", width = 1, color = "white", size = 2) +
     coord_polar("y", start = 0) +
@@ -421,7 +350,7 @@ plot_haplotype_distribution <- function(haplotype_table, colors = NULL,
 
 cat("\n")
 cat("================================================================================\n")
-cat("  SuperHap Visualization Module Loaded\n")
+cat("  GeneSuperHap Visualization Module Loaded\n")
 cat("================================================================================\n")
 cat("\nAvailable plotting functions:\n")
 cat("  - plot_ml_results()              : ML model performance & rankings\n")
