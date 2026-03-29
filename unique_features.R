@@ -1,10 +1,4 @@
 #!/usr/bin/env Rscript
-# ==============================================================================
-# SuperHap: Unique Features Module (Validated & Tested)
-# Author: Aamir Khan
-# Description: 5 unique features not available in existing tools
-# Version: 3.0
-# ==============================================================================
 
 suppressPackageStartupMessages({
   library(dplyr)
@@ -17,17 +11,6 @@ cat("===========================================================================
 cat("  SuperHap: Loading Unique Features\n")
 cat("================================================================================\n\n")
 
-# ==============================================================================
-# FEATURE 1: Machine Learning Haplotype Ranking
-# ==============================================================================
-
-#' Train ML model to rank haplotypes by predicted performance
-#' @param haplotype_data Data frame with Accession and Haplotype
-#' @param phenotype_data Data frame with Accession and trait columns
-#' @param target_trait Name of trait to predict
-#' @param test_fraction Fraction of data for testing (default 0.2)
-#' @param ntree Number of trees in random forest (default 500)
-#' @return List with trained model and performance metrics
 train_haplotype_ranker <- function(haplotype_data, phenotype_data, 
                                    target_trait, test_fraction = 0.2,
                                    ntree = 500) {
@@ -36,7 +19,6 @@ train_haplotype_ranker <- function(haplotype_data, phenotype_data,
   cat("MACHINE LEARNING HAPLOTYPE RANKING\n")
   cat("========================================\n\n")
   
-  # Merge data
   merged <- inner_join(haplotype_data, phenotype_data, by = "Accession")
   merged <- merged[!is.na(merged[[target_trait]]), ]
   
@@ -56,10 +38,8 @@ train_haplotype_ranker <- function(haplotype_data, phenotype_data,
     cat("Current n=", nrow(merged), ". Consider this when interpreting results.\n\n")
   }
   
-  # Convert Haplotype to factor
   merged$Haplotype <- as.factor(merged$Haplotype)
   
-  # Split data
   set.seed(42)
   train_idx <- sample(1:nrow(merged), 
                       size = floor((1-test_fraction) * nrow(merged)))
@@ -70,7 +50,6 @@ train_haplotype_ranker <- function(haplotype_data, phenotype_data,
   cat("  Training set:", nrow(train_data), "samples\n")
   cat("  Test set:", nrow(test_data), "samples\n\n")
   
-  # Train Random Forest
   cat("Training Random Forest model...\n")
   
   formula_str <- paste(target_trait, "~ Haplotype")
@@ -81,11 +60,9 @@ train_haplotype_ranker <- function(haplotype_data, phenotype_data,
                           importance = TRUE,
                           na.action = na.omit)
   
-  # Predictions on test set
   predictions <- predict(rf_model, newdata = test_data)
   actual <- test_data[[target_trait]]
   
-  # Performance metrics
   rmse <- sqrt(mean((actual - predictions)^2))
   mae <- mean(abs(actual - predictions))
   r_squared <- cor(actual, predictions)^2
@@ -96,7 +73,6 @@ train_haplotype_ranker <- function(haplotype_data, phenotype_data,
   cat("  R-squared: ", round(r_squared, 4), "\n")
   cat("  Variance explained:", round(r_squared * 100, 2), "%\n\n")
   
-  # Rank haplotypes by predicted performance
   haplotype_scores <- merged %>%
     group_by(Haplotype) %>%
     summarise(
@@ -106,7 +82,6 @@ train_haplotype_ranker <- function(haplotype_data, phenotype_data,
       .groups = "drop"
     )
   
-  # Add ML predictions for each haplotype
   all_predictions <- predict(rf_model, newdata = merged)
   merged$ML_Prediction <- all_predictions
   
@@ -143,17 +118,6 @@ train_haplotype_ranker <- function(haplotype_data, phenotype_data,
   ))
 }
 
-
-# ==============================================================================
-# FEATURE 2: Multi-Trait Selection Index
-# ==============================================================================
-
-#' Calculate weighted multi-trait selection index
-#' @param haplotype_data Data frame with Accession and Haplotype
-#' @param phenotype_data Data frame with Accession and trait columns
-#' @param trait_weights Named vector of weights for each trait
-#' @param trait_direction Named vector: 1 to maximize, -1 to minimize
-#' @return Data frame with selection indices per haplotype
 calculate_selection_index <- function(haplotype_data, phenotype_data, 
                                      trait_weights, trait_direction = NULL) {
   
@@ -161,19 +125,16 @@ calculate_selection_index <- function(haplotype_data, phenotype_data,
   cat("MULTI-TRAIT SELECTION INDEX\n")
   cat("========================================\n\n")
   
-  # Merge data
   merged <- inner_join(haplotype_data, phenotype_data, by = "Accession")
   
   traits <- names(trait_weights)
   cat("Traits included:", paste(traits, collapse = ", "), "\n")
   
-  # Set default direction if not provided (maximize all)
   if(is.null(trait_direction)) {
     trait_direction <- rep(1, length(traits))
     names(trait_direction) <- traits
   }
   
-  # Standardize traits
   standardized <- merged
   traits_included <- c()
   
@@ -192,9 +153,7 @@ calculate_selection_index <- function(haplotype_data, phenotype_data,
       next
     }
     
-    # Z-score standardization
     standardized[[trait]] <- (trait_values - mean_val) / sd_val
-    # Apply direction
     standardized[[trait]] <- standardized[[trait]] * trait_direction[trait]
     traits_included <- c(traits_included, trait)
   }
@@ -205,7 +164,6 @@ calculate_selection_index <- function(haplotype_data, phenotype_data,
   
   cat("Traits included in index:", paste(traits_included, collapse = ", "), "\n\n")
   
-  # Calculate weighted index
   index_values <- rep(0, nrow(standardized))
   
   for(trait in traits_included) {
@@ -215,7 +173,6 @@ calculate_selection_index <- function(haplotype_data, phenotype_data,
   
   standardized$Selection_Index <- index_values
   
-  # Summarize by haplotype
   index_summary <- standardized %>%
     group_by(Haplotype) %>%
     summarise(
@@ -239,30 +196,18 @@ calculate_selection_index <- function(haplotype_data, phenotype_data,
   ))
 }
 
-
-# ==============================================================================
-# FEATURE 3: Haplotype Stability Analysis
-# ==============================================================================
-
-#' Calculate haplotype stability across environments
-#' @param haplotype_data Data frame with Accession and Haplotype
-#' @param phenotype_data Data frame with Accession, trait, and Environment columns
-#' @param trait Trait name to analyze
-#' @return Data frame with stability metrics per haplotype
 calculate_haplotype_stability <- function(haplotype_data, phenotype_data, trait) {
   
   cat("\n========================================\n")
   cat("HAPLOTYPE STABILITY ANALYSIS\n")
   cat("========================================\n\n")
   
-  # Check for Environment column
   if(!"Environment" %in% colnames(phenotype_data)) {
     cat("ERROR: 'Environment' column not found in phenotype data.\n")
     cat("Available columns:", paste(colnames(phenotype_data), collapse = ", "), "\n")
     return(NULL)
   }
   
-  # Merge data
   merged <- inner_join(haplotype_data, phenotype_data, by = "Accession")
   merged <- merged[!is.na(merged[[trait]]) & !is.na(merged$Environment), ]
   
@@ -270,7 +215,6 @@ calculate_haplotype_stability <- function(haplotype_data, phenotype_data, trait)
   cat("Environments:", n_distinct(merged$Environment), "\n")
   cat("Total observations:", nrow(merged), "\n\n")
   
-  # Calculate stability metrics per haplotype
   stability_metrics <- merged %>%
     group_by(Haplotype) %>%
     summarise(
@@ -299,14 +243,6 @@ calculate_haplotype_stability <- function(haplotype_data, phenotype_data, trait)
   return(stability_metrics)
 }
 
-
-# ==============================================================================
-# FEATURE 4: Network-Based Haplotype Relationships
-# ==============================================================================
-
-#' Calculate genetic distance matrix between haplotypes
-#' @param variant_patterns List of variant patterns from call_haplotypes()
-#' @return Distance matrix
 calculate_haplotype_distances <- function(variant_patterns) {
   
   cat("\n========================================\n")
@@ -318,17 +254,14 @@ calculate_haplotype_distances <- function(variant_patterns) {
   
   cat("Calculating distances for", n_haps, "haplotypes...\n")
   
-  # Create distance matrix
   dist_matrix <- matrix(0, nrow = n_haps, ncol = n_haps)
   rownames(dist_matrix) <- colnames(dist_matrix) <- hap_names
   
-  # Calculate pairwise Hamming distances
   for(i in 1:(n_haps-1)) {
     for(j in (i+1):n_haps) {
       pattern1 <- variant_patterns[[i]]
       pattern2 <- variant_patterns[[j]]
       
-      # Hamming distance (proportion of differing positions)
       diff <- sum(pattern1 != pattern2, na.rm = TRUE)
       total <- length(pattern1)
       
@@ -344,15 +277,6 @@ calculate_haplotype_distances <- function(variant_patterns) {
   return(dist_matrix)
 }
 
-
-# ==============================================================================
-# FEATURE 5: Enhanced Customization Functions
-# ==============================================================================
-
-#' Rename haplotypes with custom naming scheme
-#' @param haplotype_result Result from call_haplotypes()
-#' @param new_names Vector of new names (must match number of haplotypes)
-#' @return Updated haplotype result
 rename_haplotypes <- function(haplotype_result, new_names) {
   
   old_names <- names(haplotype_result$haplotypes)
@@ -366,11 +290,9 @@ rename_haplotypes <- function(haplotype_result, new_names) {
     cat("  ", old_names[i], "->", new_names[i], "\n")
   }
   
-  # Update all components
   names(haplotype_result$haplotypes) <- new_names
   names(haplotype_result$variant_patterns) <- new_names
   
-  # Update assignments
   for(i in seq_along(old_names)) {
     haplotype_result$haplotype_assignments[
       haplotype_result$haplotype_assignments == old_names[i]
@@ -380,12 +302,6 @@ rename_haplotypes <- function(haplotype_result, new_names) {
   return(haplotype_result)
 }
 
-
-#' Create custom color palette for haplotypes
-#' @param n_haplotypes Number of haplotypes
-#' @param palette_name Name of RColorBrewer palette or "custom"
-#' @param custom_colors Optional vector of custom colors
-#' @return Named vector of colors
 create_haplotype_colors <- function(n_haplotypes, palette_name = "Set1", 
                                    custom_colors = NULL) {
   
