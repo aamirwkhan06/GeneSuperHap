@@ -1,11 +1,5 @@
 #!/usr/bin/env Rscript
-# ==============================================================================
-# SuperHap Pipeline - Step 02: Superior Haplotype Identification
-# Author: Aamir Khan
-# Description: Statistical analysis to identify best haplotypes per trait
-# ==============================================================================
 
-# Load required functions
 source("core_functions.R")
 library(dplyr)
 
@@ -14,19 +8,11 @@ cat("===========================================================================
 cat("  SUPERHAP PIPELINE - STEP 02: SUPERIOR HAPLOTYPE IDENTIFICATION\n")
 cat("================================================================================\n\n")
 
-# ==============================================================================
-# CONFIGURATION
-# ==============================================================================
-
 HAPLOTYPE_DATA <- "results/haplotypes_data.RData"
 PHENOTYPE_FILE <- "input_data/phenotypes.txt"
 OUTPUT_DIR <- "results"
 OUTPUT_PREFIX <- "superior_haplotypes"
 MIN_SAMPLES <- 3  # Minimum samples per haplotype for analysis
-
-# ==============================================================================
-# LOAD DATA
-# ==============================================================================
 
 cat("Loading haplotype data...\n")
 load(HAPLOTYPE_DATA)
@@ -38,19 +24,10 @@ phenotypes <- read.table(PHENOTYPE_FILE, header = TRUE, sep = "\t",
 cat("  Phenotype samples:", nrow(phenotypes), "\n")
 cat("  Traits:", paste(setdiff(colnames(phenotypes), "Accession"), collapse = ", "), "\n\n")
 
-# ==============================================================================
-# MERGE DATA
-# ==============================================================================
-
 cat("Merging haplotype and phenotype data...\n")
 merged <- inner_join(hap_table, phenotypes, by = "Accession")
 cat("  Merged samples:", nrow(merged), "\n\n")
 
-# ==============================================================================
-# ANALYZE EACH TRAIT
-# ==============================================================================
-
-# Get trait columns
 trait_cols <- setdiff(colnames(phenotypes), c("Accession", "Environment"))
 
 cat("Analyzing", length(trait_cols), "traits:\n")
@@ -62,7 +39,6 @@ for(trait in trait_cols) {
   
   cat("Trait:", trait, "\n")
   
-  # Filter valid data
   trait_data <- merged %>%
     filter(!is.na(.data[[trait]])) %>%
     select(Accession, Haplotype, all_of(trait))
@@ -72,7 +48,6 @@ for(trait in trait_cols) {
     next
   }
   
-  # Calculate haplotype statistics
   hap_stats <- trait_data %>%
     group_by(Haplotype) %>%
     summarise(
@@ -93,7 +68,6 @@ for(trait in trait_cols) {
     next
   }
   
-  # Identify superior haplotype
   superior_hap <- hap_stats$Haplotype[1]
   superior_mean <- hap_stats$Mean[1]
   
@@ -101,7 +75,6 @@ for(trait in trait_cols) {
   cat("  Superior haplotype:", superior_hap, "\n")
   cat("  Mean value:", round(superior_mean, 3), "\n")
   
-  # Pairwise t-tests
   haplotypes_list <- unique(trait_data$Haplotype)
   pairwise_results <- data.frame()
   
@@ -132,7 +105,6 @@ for(trait in trait_cols) {
       }
     }
     
-    # Apply Benjamini-Hochberg FDR correction for multiple testing
     if(nrow(pairwise_results) > 0) {
       pairwise_results$P_adjusted <- p.adjust(pairwise_results$P_value, method = "BH")
       pairwise_results$Significant <- ifelse(pairwise_results$P_adjusted < 0.05, "***", 
@@ -141,7 +113,6 @@ for(trait in trait_cols) {
     }
   }
   
-  # Store results
   results_list[[trait]] <- list(
     statistics = hap_stats,
     superior_haplotype = superior_hap,
@@ -149,7 +120,6 @@ for(trait in trait_cols) {
     pairwise = pairwise_results
   )
   
-  # Save individual trait results
   write.table(
     hap_stats,
     file.path(OUTPUT_DIR, paste0(OUTPUT_PREFIX, "_", trait, "_stats.txt")),
@@ -170,10 +140,6 @@ for(trait in trait_cols) {
   
   cat("  Results saved\n\n")
 }
-
-# ==============================================================================
-# SUMMARY ACROSS TRAITS
-# ==============================================================================
 
 cat("Creating summary across all traits...\n")
 
@@ -200,15 +166,9 @@ write.table(
   quote = FALSE
 )
 
-# ==============================================================================
-# SUMMARY
-# ==============================================================================
-
 cat("\n")
 cat("================================================================================\n")
 cat("  STEP 02 COMPLETE\n")
 cat("================================================================================\n")
 cat("\nSummary of Superior Haplotypes:\n")
 print(summary_table)
-cat("\nNext step: Run 03_ml_analysis.R\n")
-cat("================================================================================\n\n")
