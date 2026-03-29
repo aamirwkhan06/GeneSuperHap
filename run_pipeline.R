@@ -1,35 +1,23 @@
 #!/usr/bin/env Rscript
-# ==============================================================================
-# SuperHap: Master Pipeline Runner
-# Author: Aamir Khan
-# Description: Run complete pipeline with validation
-# ==============================================================================
 
 cat("
 ################################################################################
-                            SUPERHAP PIPELINE
+                            GeneSuperHap PIPELINE
                      Machine Learning Haplotype Analysis
 ################################################################################
 
-Author: Aamir Khan
 Version: 1.0
 Date: ", format(Sys.Date(), "%B %d, %Y"), "
 
 ################################################################################
 \n")
 
-# ==============================================================================
-# SETUP
-# ==============================================================================
-
 cat("Checking setup...\n")
 
-# Check if running from correct directory
 if(!file.exists("core_functions.R")) {
   stop("ERROR: Please run this script from the superhap directory")
 }
 
-# Check for required packages
 required_packages <- c("dplyr", "tidyr", "ggplot2", "RColorBrewer", 
                       "randomForest", "caret", "pheatmap", "igraph", 
                       "ggrepel", "gridExtra")
@@ -51,13 +39,11 @@ if(length(missing_packages) > 0) {
 
 cat("  ✓ All required packages installed\n")
 
-# Check for input files
 if(!file.exists("input_data/variants.vcf") && 
    !file.exists("input_data/variants.vcf.gz")) {
   cat("\nWARNING: No VCF file found in input_data/\n")
   cat("Using test data instead...\n")
   
-  # Copy test data to input_data
   if(!dir.exists("input_data")) {
     dir.create("input_data")
   }
@@ -70,11 +56,6 @@ if(!file.exists("input_data/variants.vcf") &&
 
 cat("  ✓ Input files ready\n\n")
 
-# ==============================================================================
-# RUN PIPELINE
-# ==============================================================================
-
-# Track execution time
 pipeline_start <- Sys.time()
 
 scripts <- c(
@@ -119,7 +100,6 @@ for(i in seq_along(scripts)) {
   
   cat("\nStep", i, "completed in", round(results$Runtime[i], 2), "seconds\n")
   
-  # Stop if step failed
   if(results$Status[i] == "FAILED") {
     cat("\nPipeline stopped due to error.\n")
     break
@@ -128,10 +108,6 @@ for(i in seq_along(scripts)) {
 
 pipeline_end <- Sys.time()
 total_time <- as.numeric(difftime(pipeline_end, pipeline_start, units = "secs"))
-
-# ==============================================================================
-# FINAL SUMMARY
-# ==============================================================================
 
 cat("\n\n")
 cat("################################################################################\n")
@@ -165,7 +141,6 @@ if(any(results$Status == "FAILED")) {
 
 cat("\n################################################################################\n\n")
 
-# Save execution log
 log_file <- file.path("results", paste0("pipeline_log_", 
                       format(Sys.time(), "%Y%m%d_%H%M%S"), ".txt"))
 writeLines(capture.output({
