@@ -20,7 +20,7 @@ GeneSuperHap is an independent R-based pipeline for haplotype analysis specifica
 
 ## Features
 
-### 1. **Machine Learning Haplotype Ranking** 🤖
+### 1. **Machine Learning Haplotype Ranking**
 
 Train Random Forest models to predict haplotype performance based on phenotypic data.
 
@@ -49,7 +49,7 @@ print(ml_model$haplotype_rankings)
 
 ---
 
-### 2. **Multi-Trait Selection Index** 📊
+### 2. **Multi-Trait Selection Index**
 
 Combine multiple traits into a single breeding criterion with customizable weights.
 
@@ -76,7 +76,7 @@ selection_idx <- calculate_selection_index(
 
 ---
 
-### 3. **Haplotype Stability Analysis** 🌍
+### 3. **Haplotype Stability Analysis**
 
 Evaluate performance across environments to identify robust haplotypes.
 
@@ -101,7 +101,7 @@ stability <- calculate_haplotype_stability(
 
 ---
 
-### 4. **Network-Based Haplotype Relationships** 🕸️
+### 4. **Network-Based Haplotype Relationships**
 
 Visualize genetic distances and relationships between haplotypes.
 
@@ -126,7 +126,7 @@ distances <- calculate_haplotype_distances(
 
 ---
 
-### 5. **Enhanced Customization** 🎨
+### 5. **Enhanced Customization**
 
 Full control over haplotype names, colors, and plot aesthetics.
 
@@ -339,16 +339,6 @@ Research Scientist, Bioinformatics
 ## License
 
 MIT License - Free for research and commercial use
-
----
-
-## Future Development
-
-Planned features:
-- Additional ML algorithms (XGBoost, neural networks)
-- Web interface
-- More visualization types
-- Integration with genomic selection
 
 ---
 
