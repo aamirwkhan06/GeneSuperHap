@@ -546,4 +546,4 @@ GitHub: [https://github.com/aamirwkhan06/GeneSuperHap]
 
 ---
 
-**You're all set! Happy haplotyping! 🧬🌱**
+**You're all set! Happy haplotyping!!
